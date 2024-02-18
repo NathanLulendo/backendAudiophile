@@ -19,6 +19,7 @@ const port = process.env.PORT || 4000;
 // Connect to database
 connection();
 
+
 // Middleware
 app.use(express.json());
 app.use(cors(corsOptions));
@@ -36,7 +37,9 @@ app.use("*", (req, res) => {
   res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
-// Start server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+if(connection){
+  // Start server
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
