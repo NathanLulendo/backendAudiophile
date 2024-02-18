@@ -11,7 +11,7 @@ const rootRoutes = require('./routes/root');
 const categoryRoutes = require('./routes/categorieRoute');
 const productRoutes = require('./routes/productRoute');
 const userRoutes = require('./routes/userRoute');
-const sellRoutes = require('./routes/sellRoute');
+const saleRoutes = require('./routes/saleRoute');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -30,7 +30,7 @@ app.use('/', rootRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
-app.use('/sells', sellRoutes);
+app.use('/sales', saleRoutes);
 
 // Handle 404
 app.use("*", (req, res) => {
