@@ -2,10 +2,14 @@ const sale = require('../model/sale');
 // Create a new sale
 exports.createSale = async (req, res) => {
     const { product, quantity, price } = req.body;
+    if (!product || !quantity || !price) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
     const newSale = new sale({
         product,
         quantity,
-        price
+        price,
+        date: Date.now()
     });
     try {
         const savedSale = await newSale.save();
@@ -18,6 +22,10 @@ exports.createSale = async (req, res) => {
 exports.getAllSales = async (req, res) => {
     try {
         const sales = await sale.find();
+
+        if (!sales.length) {
+            return res.status(404).json({ message: 'No sales found' });
+        }
         res.status(200).json(sales);
     } catch (err) {
         res.status(500).json({ message: err.message });

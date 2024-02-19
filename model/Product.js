@@ -20,14 +20,11 @@ const OtherProductSchema = new mongoose.Schema({
 const ProductSchema = new mongoose.Schema({
     id: Number,
     slug: String,
-    name: {
-        type: String,
-        required: true
-    },
+    name: String,
     image: ImageSchema,
     category: String,
     categoryImage: ImageSchema,
-    new: Boolean,
+    New: Boolean,
     price: Number,
     description: String,
     features: String,

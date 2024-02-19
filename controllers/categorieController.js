@@ -29,6 +29,9 @@ const getCategoryById = async (req, res) => {
 
 const createCategory = async (req, res) => {
     const { name} = req.body;
+    if (!name) {
+        return res.status(400).json({ message: 'Name is required' });
+    }
     const newCategory = new Categorie({ name});
     try {
         const savedCategory = await newCategory.save();
