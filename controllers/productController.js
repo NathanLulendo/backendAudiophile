@@ -1,5 +1,28 @@
 const Product = require('../model/Product');
 
+const multer = require('multer');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'images');
+    },  
+    filename: function (req, file, cb) {
+        cb(null, uuidv4() + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
+
+let upload = multer({ storage: storage, fileFilter: fileFilter });
+
 const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find();
@@ -29,7 +52,6 @@ const createProduct = async (req, res) => {
 
     const {
         name,
-        image,
         category,
         price,
         description,
@@ -38,6 +60,10 @@ const createProduct = async (req, res) => {
         gallery,
         others
     } = req.body;
+    const { 
+        image
+    } = req.file;
+    
     if ( !name || !image || !category || !price || !description || !features || !includes || !gallery || !others) {
         return res.status(400).json({ message: 'All fields are required' });
     }
