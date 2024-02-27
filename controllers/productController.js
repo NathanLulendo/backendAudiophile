@@ -62,7 +62,7 @@ const createProduct = async (req, res) => {
     } = req.body;
     const { 
         image
-    } = req.file;
+    } = req.file.filename;
     
     if ( !name || !image || !category || !price || !description || !features || !includes || !gallery || !others) {
         return res.status(400).json({ message: 'All fields are required' });
