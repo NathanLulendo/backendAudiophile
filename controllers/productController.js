@@ -13,7 +13,7 @@ const getAllProducts = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const product = await Product.findById(id);
         if (product == null) {
@@ -28,12 +28,9 @@ const getProduct = async (req, res) => {
 const createProduct = async (req, res) => {
 
     const {
-        slug,
         name,
         image,
         category,
-        categoryImage,
-        New,
         price,
         description,
         features,
@@ -41,24 +38,20 @@ const createProduct = async (req, res) => {
         gallery,
         others
     } = req.body;
-    if (!slug || !name || !image || !category || !categoryImage || !New || !price || !description || !features || !includes || !gallery || !others) {
+    if ( !name || !image || !category || !price || !description || !features || !includes || !gallery || !others) {
         return res.status(400).json({ message: 'All fields are required' });
     }
     const product = new Product({
         // Fill in product data from req.body
-        slug,
         name,
         image,
         category,
-        categoryImage,
-        New,
         price,
         description,
         features,
         includes,
         gallery,
         others
-            
     });
     try {
         const newProduct = await product.save();
@@ -69,9 +62,10 @@ const createProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
+    const { name, image, category, price, description, features, includes, gallery, others } = req.body;
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(id, { new: true });
+        const updatedProduct = await Product.findByIdAndUpdate(id, { name: name, image: image, category: category, price: price, description: description, features: features, includes: includes, gallery: gallery, others: others }, { new: true });
         res.status(200).json(updatedProduct);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -79,7 +73,7 @@ const updateProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         await Product.findByIdAndDelete(id);
         res.status(200).json({ message: 'Deleted product' });
