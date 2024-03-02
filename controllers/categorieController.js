@@ -28,7 +28,7 @@ const getCategoryById = async (req, res) => {
 };
 
 const createCategory = async (req, res) => {
-    const { name} = req.body;
+    const { name } = req.body;
     if (!name) {
         return res.status(400).json({ message: 'Name is required' });
     }
@@ -42,11 +42,11 @@ const createCategory = async (req, res) => {
 };
 
 const updateCategory = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
+    const { name } = req.body;
+
     try {
-        const updatedCategory = await Categorie.findByIdAndUpdate(
-            id
-        );
+        const updatedCategory = await Categorie.findByIdAndUpdate(id, { name }, { new: true });
         if (!updatedCategory) {
             return res.status(404).json({ message: 'Category not found' });
         }
@@ -57,7 +57,7 @@ const updateCategory = async (req, res) => {
 };
 
 const deleteCategory = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const deletedCategory = await Categorie.findByIdAndDelete(id);
         if (!deletedCategory) {

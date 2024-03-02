@@ -13,7 +13,7 @@ const getAllProducts = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const product = await Product.findById(id);
         if (product == null) {
@@ -28,37 +28,41 @@ const getProduct = async (req, res) => {
 const createProduct = async (req, res) => {
 
     const {
-        slug,
         name,
-        image,
         category,
-        categoryImage,
-        New,
         price,
         description,
         features,
         includes,
-        gallery,
-        others
     } = req.body;
-    if (!slug || !name || !image || !category || !categoryImage || !New || !price || !description || !features || !includes || !gallery || !others) {
+
+    let image = '';
+    let gallery = [];
+
+    if (req.files['image']) {
+        image = req.files['image'][0].filename;
+    }
+    
+    if (req.files['gallery']) {
+        gallery = req.files['gallery'].map(file => file.filename);
+    }
+
+    console.log(req.files);
+
+
+    if ( !name || !category || !price || !description || !features || !includes || !gallery) {
         return res.status(400).json({ message: 'All fields are required' });
     }
     const product = new Product({
         // Fill in product data from req.body
-        slug,
         name,
         image,
         category,
-        categoryImage,
-        New,
         price,
         description,
         features,
         includes,
         gallery,
-        others
-            
     });
     try {
         const newProduct = await product.save();
@@ -69,17 +73,44 @@ const createProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
+
+    let productFields = {
+        name: req.body.name,
+        category: req.body.category,
+        price: req.body.price,
+        description: req.body.description,
+        features: req.body.features,
+        includes: req.body.includes,
+    };
+
+    if (req.files['image']) {
+        const image = req.files['image'][0].filename;
+        productFields.image = image;
+    }
+
+    if (req.files['gallery']) {
+        const gallery = req.files['gallery'].map(file => file.filename);
+        productFields.gallery = gallery;
+    }
+
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(id, { new: true });
-        res.status(200).json(updatedProduct);
+        let product = await Product.findById(id);
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        product = await Product.findByIdAndUpdate(id, { $set: productFields }, { new: true });
+        res.status(200).json(product);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        console.error(err.message);
+        res.status(500).send('Server Error');
     }
 };
 
 const deleteProduct = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         await Product.findByIdAndDelete(id);
         res.status(200).json({ message: 'Deleted product' });

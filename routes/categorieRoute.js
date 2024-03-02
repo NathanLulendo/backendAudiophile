@@ -5,11 +5,10 @@ const router = express.Router();
 const categorieController = require('../controllers/categorieController');
 
 // Define the routes for the "categorie" resource
-router.route('/')   
-.get( categorieController.getAllCategories)
-.get( categorieController.getCategoryById)
-.post( categorieController.createCategory)
-.put( categorieController.updateCategory)
-.delete( categorieController.deleteCategory)
+router.get('/', categorieController.getAllCategories);
+router.get('/:id', categorieController.getCategoryById);
+router.post('/', categorieController.createCategory);
+router.put('/:id', categorieController.updateCategory);
+router.delete('/:id', categorieController.deleteCategory);
 
 module.exports = router;
