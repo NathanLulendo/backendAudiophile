@@ -84,13 +84,16 @@ const updateProduct = async (req, res) => {
         includes: req.body.includes,
     };
 
+    let image = '';
+    let gallery = [];
+
     if (req.files['image']) {
-        const image = req.files['image'][0].filename;
+        image = req.files['image'][0].filename;
         productFields.image = image;
     }
 
     if (req.files['gallery']) {
-        const gallery = req.files['gallery'].map(file => file.filename);
+        gallery = req.files['gallery'].map(file => file.filename);
         productFields.gallery = gallery;
     }
 

@@ -3,13 +3,15 @@ const router = express.Router();
 const productController = require('../controllers/productController');
 const path = require('path');
 const multer = require('multer');
+const { v4: uuidv4 } = require('uuid');
+
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, path.join('public/images/products/'));
     },
     filename: function(req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
+        cb(null, uuidv4() + path.extname(file.originalname));
     }
 });
 
