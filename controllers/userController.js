@@ -34,7 +34,7 @@ const getAllUsers = async (req, res) => {
 };
 // Get a user by id
 const getUser = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const user = await user.findById(id);
         if (user == null) {
@@ -47,7 +47,7 @@ const getUser = async (req, res) => {
 };
 // Update a user
 const updateUser = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const updatedUser = await user.findByIdAndUpdate(id, { new: true });
         res.status(200).json(updatedUser);
@@ -57,7 +57,7 @@ const updateUser = async (req, res) => {
 };
 // Delete a user
 const deleteUser = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         await user.findByIdAndDelete(id);
         res.status(200).json({ message: 'Deleted user' });
