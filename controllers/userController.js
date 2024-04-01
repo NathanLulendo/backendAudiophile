@@ -34,7 +34,7 @@ const getAllUsers = async (req, res) => {
 };
 // Get a user by id
 const getUser = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const user = await user.findById(id);
         if (user == null) {
@@ -47,17 +47,32 @@ const getUser = async (req, res) => {
 };
 // Update a user
 const updateUser = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
+    let userFields = {
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password
+    };
+
+    console.log(userFields);
+
     try {
-        const updatedUser = await user.findByIdAndUpdate(id, { new: true });
-        res.status(200).json(updatedUser);
+        let client = await user.findById(id);
+        console.log(client);
+        if (!client) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        client = await user.findByIdAndUpdate(id, { $set: userFields }, { new: true });
+        console.log(client);
+        res.status(200).json(client);
+
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 };
 // Delete a user
 const deleteUser = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         await user.findByIdAndDelete(id);
         res.status(200).json({ message: 'Deleted user' });
