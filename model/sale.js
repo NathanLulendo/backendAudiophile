@@ -1,21 +1,30 @@
 const mongoose = require('mongoose');
 
+const salesItemSchema = new mongoose.Schema({
+  quantity: Number,
+  item: String,
+  price: Number
+});
+
+
+
 const saleSchema = new mongoose.Schema({
-  product: {
-    type: String,
-    required: true
-  },
-  quantity: {
-    type: Number,
-    required: true
-  },
-  price: {
+  product:[salesItemSchema],
+  totalAmount: {
     type: Number,
     required: true
   },
   date: {
     type: Date,
     default: Date.now
+  },
+  userId: {
+    type: String,
+    ref: 'User'
+  },
+  address: {
+    type: String,
+    required: true
   }
 });
 
