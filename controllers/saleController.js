@@ -1,14 +1,16 @@
 const sale = require('../model/sale');
 // Create a new sale
-exports.createSale = async (req, res) => {
-    const { product, quantity, price } = req.body;
-    if (!product || !quantity || !price) {
+const createSale = async (req, res) => {
+    const { product, quantity, price, userId, address} = req.body;
+    if (!product || !quantity || !price || !userId || !address) {
         return res.status(400).json({ message: 'All fields are required' });
     }
     const newSale = new sale({
         product,
         quantity,
         price,
+        userId,
+        address,
         date: Date.now()
     });
     try {
@@ -19,7 +21,7 @@ exports.createSale = async (req, res) => {
     }
 };
 // Get all sales
-exports.getAllSales = async (req, res) => {
+const getAllSales = async (req, res) => {
     try {
         const sales = await sale.find();
 
@@ -32,11 +34,11 @@ exports.getAllSales = async (req, res) => {
     }
 };
 // Get a sale by id
-exports.getSale = async (req, res) => {
-    const { id } = req.body;
+const getSale = async (req, res) => {
+    const { id } = req.params;
     try {
         const sale = await sale.findById(id);
-        if (sell == null) {
+        if (sale == null) {
             return res.status(404).json({ message: 'Cannot find sale' });
         }
         res.status(200).json(sale);
@@ -45,18 +47,30 @@ exports.getSale = async (req, res) => {
     }
 };
 // Update a sale
-exports.updateSale = async (req, res) => {
-    const { id } = req.body;
+const updateSale = async (req, res) => {
+    const { id } = req.params;
+    let saleFields = {
+        product: req.body.product,
+        quantity: req.body.quantity,
+        price: req.body.price,
+        //userId: req.body.userId,
+        address: req.body.address
+    };
+
     try {
-        const updatedSale = await sale.findByIdAndUpdate(id, { new: true });
-        res.status(200).json(updatedSale);
+        let sale = await sale.findById(id);
+        if (sale == null) {
+            return res.status(404).json({ message: 'Cannot find sale' });
+        }
+        sale = await sale.findByIdAndUpdate(id, { $set: saleFields }, { new: true });
+        res.status(200).json(sale);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 };
 // Delete a sale
-exports.deleteSale = async (req, res) => {
-    const { id } = req.body;
+const deleteSale = async (req, res) => {
+    const { id } = req.params;
     try {
         await sale.findByIdAndDelete(id);
         res.status(200).json({ message: 'Deleted sale' });
@@ -64,3 +78,12 @@ exports.deleteSale = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+module.exports = {
+    createSale,
+    getAllSales,
+    getSale,
+    updateSale,
+    deleteSale
+};
+
