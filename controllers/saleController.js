@@ -1,14 +1,13 @@
 const sale = require('../model/sale');
 // Create a new sale
 const createSale = async (req, res) => {
-    const { product, quantity, price, userId, address} = req.body;
-    if (!product || !quantity || !price || !userId || !address) {
+    const { product, totalAmount, userId, address} = req.body;
+    if (!product || !totalAmount || !userId || !address) {
         return res.status(400).json({ message: 'All fields are required' });
     }
     const newSale = new sale({
         product,
-        quantity,
-        price,
+        totalAmount,
         userId,
         address,
         date: Date.now()
@@ -51,9 +50,8 @@ const updateSale = async (req, res) => {
     const { id } = req.params;
     let saleFields = {
         product: req.body.product,
-        quantity: req.body.quantity,
-        price: req.body.price,
-        //userId: req.body.userId,
+        totalAmount: req.body.totalAmount,
+        userId: req.body.userId,
         address: req.body.address
     };
 

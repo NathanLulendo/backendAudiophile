@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
 
+const salesItemSchema = new mongoose.Schema({
+  quantity: Number,
+  item: String,
+  price: Number
+});
+
+
+
 const saleSchema = new mongoose.Schema({
-  product: {
-    type: String,
-    required: true
-  },
-  quantity: {
-    type: Number,
-    required: true
-  },
-  price: {
+  product:[salesItemSchema],
+  totalAmount: {
     type: Number,
     required: true
   },
@@ -18,7 +19,7 @@ const saleSchema = new mongoose.Schema({
     default: Date.now
   },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: 'User'
   },
   address: {
