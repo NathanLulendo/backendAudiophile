@@ -56,7 +56,7 @@ const loginUser = async (req, res) => {
                 }
                 else {
                     res.cookie('token', token).json(user);
-                    console.log(user);
+                    //console.log(user);
                 }
             });
         }
@@ -75,6 +75,9 @@ const getProfile = (req, res) => {
             if(err) {
                 throw err;
             }
+
+            console.log(user);
+
             res.json(user);
         });
     }

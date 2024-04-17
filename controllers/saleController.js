@@ -2,6 +2,14 @@ const sale = require('../model/sale');
 // Create a new sale
 const createSale = async (req, res) => {
     const { product, totalAmount, userId, address} = req.body;
+
+    console.log(
+        product,
+        totalAmount,
+        userId,
+        address
+    )
+
     if (!product || !totalAmount || !userId || !address) {
         return res.status(400).json({ message: 'All fields are required' });
     }
@@ -18,6 +26,12 @@ const createSale = async (req, res) => {
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
+
+    console.log(product);
+    console.log(totalAmount);
+    console.log(userId);
+    console.log(address);
+
 };
 // Get all sales
 const getAllSales = async (req, res) => {
@@ -77,11 +91,21 @@ const deleteSale = async (req, res) => {
     }
 };
 
+const DeleteAllSales = async (req, res) => {
+    try {
+        await sale.deleteMany();
+        res.status(200).json({ message: 'Deleted all sales' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 module.exports = {
     createSale,
     getAllSales,
     getSale,
     updateSale,
-    deleteSale
+    deleteSale,
+    DeleteAllSales
 };
 

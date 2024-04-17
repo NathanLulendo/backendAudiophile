@@ -7,7 +7,6 @@ const salesItemSchema = new mongoose.Schema({
 });
 
 
-
 const saleSchema = new mongoose.Schema({
   product:[salesItemSchema],
   totalAmount: {
